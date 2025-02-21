@@ -14,10 +14,13 @@ const rootSlice = createSlice({
     reducers: {
         setBookedTicket: (state, action: PayloadAction<TTicket>) => {
             state.bookedTickets.push(action.payload)
+        },
+        setSearchedMovies : (state,action:PayloadAction<Tmovie[]>) => {
+            state.movies = action.payload;
         }
     }
 })
 
 export default rootSlice.reducer;
 
-export const { setBookedTicket } = rootSlice.actions
+export const { setBookedTicket, setSearchedMovies } = rootSlice.actions

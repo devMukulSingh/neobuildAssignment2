@@ -1,5 +1,5 @@
-import { useAppSelector } from '@/redux/hooks';
-import React from 'react'
+import { useAppSelector } from "@/redux/hooks";
+import React from "react";
 import { Tmovie } from "@/redux/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,9 +29,11 @@ export default function Movies() {
         md:pr-10
       "
       >
-        {movies.map((movie, index) => (
-          <Movie movie={movie} key={index} />
-        ))}
+        {movies.length === 0 ? (
+          <h1>No movies found</h1>
+        ) : (
+          movies.map((movie, index) => <Movie movie={movie} key={index} />)
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 'use client'
 import UserButton from "@/components/commons/UserButton";
-import { Table } from "@/components/ui/table";
 import { useAppSelector } from "@/redux/hooks";
 import React from "react";
 import { DataTable } from "./components/DataTable";
