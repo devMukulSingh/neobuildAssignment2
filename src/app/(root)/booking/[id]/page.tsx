@@ -16,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { options } from "@/lib/constants";
 import { ticketBookSchema } from "@/lib/schema";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/redux/hooks";
@@ -23,9 +24,19 @@ import { setBookedTicket } from "@/redux/reducer";
 import { Tmovie } from "@/redux/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarIcon, Earth, LucideIcon, Minus, Moon, Plus, Sun } from "lucide-react";
+import {
+  CalendarIcon,
+  Earth,
+  Loader,
+  Loader2,
+  LucideIcon,
+  Minus,
+  Moon,
+  Plus,
+  Sun,
+} from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -38,88 +49,112 @@ export default function page({}: Props) {
   const { id } = useParams();
   const movies = useAppSelector((state) => state.movies);
   const movie = movies.find((movie) => movie.id === id);
-  if(movie)
-  return (
-    <div className="w-full">
-      <header className="flex gap-10">
-        <figure
-          className="
+  if (movie)
+    return (
+      <div className="w-full">
+        <header className="flex gap-10">
+          <figure
+            className="
           w-4/5
           h-[15rem]
           relative
           rounded-md
           "
-        >
-          <Image
-            src={movie?.poster || ""}
-            alt="poster"
-            fill
-            className="object-cover object-top rounded-md"
-          />
-        </figure>
-        <UserButton />
-      </header>
-      <div
-        className="
+          >
+            <Image
+              src={movie?.poster || ""}
+              alt="poster"
+              fill
+              className="object-cover object-top rounded-md"
+            />
+          </figure>
+          <UserButton />
+        </header>
+        <div
+          className="
         flex
         flex-col
         gap-5
       "
-      >
-        <h1 className="text-xl font-medium">{movie?.title}</h1>
-        <TicketBookForm movie={movie}/>
+        >
+          <h1 className="text-xl font-medium">{movie?.title}</h1>
+          <TicketBookForm movie={movie} />
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 type TformValues = z.infer<typeof ticketBookSchema>;
 
 type TticketBookFormProps = {
-  movie:Tmovie
-}
+  movie: Tmovie;
+};
 
 function TicketBookForm({ movie }: TticketBookFormProps) {
+  function delay() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 2000);
+    });
+  }
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter();
   const form = useForm<TformValues>({
     resolver: zodResolver(ticketBookSchema),
     defaultValues: {
       ticketCount: 1,
       date: new Date(),
-      showTime: "9:00",
+      showTime: "12:00",
     },
   });
-  function onSubmit(data: TformValues) {
-    dispatch(setBookedTicket({
-      ...data,
-      id:Math.ceil(Math.random() * 10).toString(),
-      movie:movie.title,
-      ticketPrice:movie.ticketPrice
-    }));
-    form.reset({
-      date: new Date(),
-      showTime: "9:00",
-      ticketCount: 1,
-    });
-    toast.success("Ticket booked");
+  async function onSubmit(data: TformValues) {
+    try {
+      setIsLoading(true);
+      dispatch(
+        setBookedTicket({
+          ...data,
+          id: Math.ceil(Math.random() * 10).toString(),
+          movie: movie.title,
+          ticketPrice: movie.ticketPrice,
+        })
+      );
+      await delay();
+      toast.success("Ticket booked");
+      form.reset({
+        date: new Date(),
+        showTime: "12:00",
+        ticketCount: 1,
+      });
+      router.push("/activity");
+    } catch (e) {
+      toast.error('Unable to book ticket, please contact the developer.')
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   }
   return (
     <form className="space-y-10" onSubmit={form.handleSubmit(onSubmit)}>
       <Form {...form}>
-        <TicketCountField form={form} />
-        <ShowTimeFields form={form} />
-        <DateField form={form} />
+        <TicketCountField disabled={isLoading} form={form} />
+        <ShowTimeFields disabled={isLoading} form={form} />
+        <DateField disabled={isLoading} form={form} />
       </Form>
-      <Button className="w-[15rem]">Book Ticket</Button>
+      <Button disabled={isLoading} className="w-[15rem]">
+        {isLoading ? <Loader2 className="animate-spin" /> : "Book Ticket"}
+      </Button>
     </form>
   );
 }
 
 type Tform = {
   form: UseFormReturn<TformValues, any, undefined>;
+   disabled:boolean
 };
 
-function TicketCountField({ form }: Tform) {
+function TicketCountField({ form,disabled }: Tform) {
   return (
     <FormField
       name="ticketCount"
@@ -131,7 +166,7 @@ function TicketCountField({ form }: Tform) {
             <Button
               type="button"
               onClick={() => field.onChange(field.value - 1)}
-              disabled={form.getValues("ticketCount") <= 1}
+              disabled={disabled || form.getValues("ticketCount") <= 1}
               size={"icon"}
               variant={"ghost"}
             >
@@ -139,6 +174,7 @@ function TicketCountField({ form }: Tform) {
             </Button>
             <FormControl>
               <Input
+                disabled={disabled}
                 type="number"
                 className="
                     text-center
@@ -151,6 +187,7 @@ function TicketCountField({ form }: Tform) {
             </FormControl>
 
             <Button
+              disabled={disabled}
               type="button"
               onClick={() => field.onChange(field.value + 1)}
               size={"icon"}
@@ -166,26 +203,10 @@ function TicketCountField({ form }: Tform) {
   );
 }
 
-type Toption = {
-  value:"9:00" | "12:00" | "18:00",
-  icon:LucideIcon
-}
 
-function ShowTimeFields({ form }: Tform) {
-  const options: Toption[] = [
-    {
-      icon: Sun,
-      value: "9:00",
-    },
-    {
-      icon: Earth,
-      value: "12:00",
-    },
-    {
-      icon: Moon,
-      value: "18:00",
-    },
-  ];
+
+function ShowTimeFields({ form,disabled }: Tform) {
+
 
   const [activeShowTime, setactiveShowTime] = useState(
     form.getValues("showTime")
@@ -201,6 +222,7 @@ function ShowTimeFields({ form }: Tform) {
             {options.map((option, index) => (
               <FormControl key={index}>
                 <Button
+                  disabled={disabled}
                   type="button"
                   style={
                     activeShowTime === option.value
@@ -212,8 +234,8 @@ function ShowTimeFields({ form }: Tform) {
                   }
                   onClick={() => {
                     field.onChange(option.value);
-                    setactiveShowTime(option.value)
-                  } }
+                    setactiveShowTime(option.value);
+                  }}
                   className={`
                 flex 
                 gap-2 
@@ -237,7 +259,7 @@ function ShowTimeFields({ form }: Tform) {
   );
 }
 
-function DateField({ form }: Tform) {
+function DateField({ form,disabled }: Tform) {
   return (
     <FormField
       name="date"
@@ -250,19 +272,20 @@ function DateField({ form }: Tform) {
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
+                  disabled={disabled}
                   type="button"
                   variant={"outline"}
                   className={cn(
-                    "w-[240px] pl-3 text-left font-normal",
+                    "w-[140px] pl-3 font-normal bg-neutral-300",
                     !field.value && "text-muted-foreground"
                   )}
                 >
+                  <CalendarIcon className="text-black mr-auto h-4 w-4 " />
                   {field.value ? (
-                    format(field.value, "PPP")
+                    format(field.value, "dd-MM-yyyy")
                   ) : (
                     <span>Pick a date</span>
                   )}
-                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
               </FormControl>
             </PopoverTrigger>
@@ -271,9 +294,7 @@ function DateField({ form }: Tform) {
                 mode="single"
                 selected={field.value}
                 onSelect={field.onChange}
-                disabled={(date) =>
-                  date < new Date() 
-                }
+                disabled={(date) => date < new Date()}
                 initialFocus
               />
             </PopoverContent>

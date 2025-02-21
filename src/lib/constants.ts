@@ -1,3 +1,5 @@
+import { Earth, LucideIcon, Moon, Sun } from "lucide-react";
+
 export const movies =  [
     {
         id: '1',
@@ -35,3 +37,21 @@ export const movies =  [
             "https://www.themoviedb.org/t/p/w1280/pzIddUEMWhWzfvLI3TwxUG2wGoi.jpg",
     },
 ]
+export type Toption = {
+    value: "9:00" | "12:00" | "18:00";
+    icon: LucideIcon;
+};
+export const options: Toption[] = [
+    {
+        icon: Sun,
+        value: "9:00",
+    },
+    {
+        icon: Earth,
+        value: "12:00",
+    },
+    {
+        icon: Moon,
+        value: "18:00",
+    },
+];
