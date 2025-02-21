@@ -20,6 +20,7 @@ import { ticketBookSchema } from "@/lib/schema";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/redux/hooks";
 import { setBookedTicket } from "@/redux/reducer";
+import { Tmovie } from "@/redux/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Earth, LucideIcon, Minus, Moon, Plus, Sun } from "lucide-react";
@@ -37,6 +38,7 @@ export default function page({}: Props) {
   const { id } = useParams();
   const movies = useAppSelector((state) => state.movies);
   const movie = movies.find((movie) => movie.id === id);
+  if(movie)
   return (
     <div className="w-full">
       <header className="flex gap-10">
@@ -65,7 +67,7 @@ export default function page({}: Props) {
       "
       >
         <h1 className="text-xl font-medium">{movie?.title}</h1>
-        <TicketBookForm />
+        <TicketBookForm movie={movie}/>
       </div>
     </div>
   );
@@ -73,8 +75,12 @@ export default function page({}: Props) {
 
 type TformValues = z.infer<typeof ticketBookSchema>;
 
-function TicketBookForm() {
-  const dispatch = useDispatch()
+type TticketBookFormProps = {
+  movie:Tmovie
+}
+
+function TicketBookForm({ movie }: TticketBookFormProps) {
+  const dispatch = useDispatch();
   const form = useForm<TformValues>({
     resolver: zodResolver(ticketBookSchema),
     defaultValues: {
@@ -84,14 +90,18 @@ function TicketBookForm() {
     },
   });
   function onSubmit(data: TformValues) {
-    console.log(data);
-    dispatch(setBookedTicket(data))
+    dispatch(setBookedTicket({
+      ...data,
+      id:Math.ceil(Math.random() * 10).toString(),
+      movie:movie.title,
+      ticketPrice:movie.ticketPrice
+    }));
     form.reset({
-      date:new Date,
-      showTime:"9:00",
-      ticketCount:1
-    })
-    toast.success("Ticket booked")
+      date: new Date(),
+      showTime: "9:00",
+      ticketCount: 1,
+    });
+    toast.success("Ticket booked");
   }
   return (
     <form className="space-y-10" onSubmit={form.handleSubmit(onSubmit)}>
@@ -262,7 +272,7 @@ function DateField({ form }: Tform) {
                 selected={field.value}
                 onSelect={field.onChange}
                 disabled={(date) =>
-                  date > new Date() || date < new Date("1900-01-01")
+                  date < new Date() 
                 }
                 initialFocus
               />

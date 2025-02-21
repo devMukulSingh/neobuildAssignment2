@@ -11,7 +11,13 @@ export type TinitialState = {
 export type Tmovie = {
     title:string,
     id: string,
-    poster:string
+    poster:string,
+    ticketPrice:number,
+
 }
 
-export type TTicket = z.infer<typeof ticketBookSchema>
+export type TTicket = z.infer<typeof ticketBookSchema> & {
+    ticketPrice:number
+    movie: string
+    id:string
+}
