@@ -16,6 +16,7 @@ import { z } from "zod";
 import { Earth, Keyboard, User,  } from "lucide-react"
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import Logo from "@/components/commons/Logo";
 
 type Props = {};
 
@@ -46,9 +47,8 @@ export default function LoginPage({}: Props) {
         text-white
         "
       >
-        <h1 className="flex text-xl items-center gap-2">
-          <Earth size={40}/>
-          Almanack</h1>
+        <Logo/>
+
         <LoginForm />
       </div>
     </div>
@@ -141,6 +141,7 @@ function LoginForm() {
                 >
                   <Keyboard />
                   <Input
+                    type="password"
                     placeholder="Password"
                     className="
                   pl-0
