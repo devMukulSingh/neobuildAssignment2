@@ -1,8 +1,14 @@
+'use client'
+import UserButton from "@/components/commons/UserButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAppSelector } from "@/redux/hooks";
+import { Tmovie } from "@/redux/types";
 import { Search, User, UserCircle, UserCircle2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 export default function BookingPage() {
   return (
@@ -28,24 +34,7 @@ function Header() {
         "
     >
       <Searchbar />
-      <div className="flex items-center gap-2">
-        <Button
-          size={"icon"}
-          className="
-            hover:bg-netrual-100
-            bg-neutral-300
-            rounded-full
-            h-12
-            w-12
-            "
-        >
-          <UserCircle2 size={30} className="text-black " />
-        </Button>
-        <div className="">
-          <h1 className="">Naval</h1>
-          <h1> Ravikant</h1>
-        </div>
-      </div>
+      <UserButton/>
     </header>
   );
 }
@@ -79,59 +68,28 @@ function Searchbar() {
 }
 
 function Movies() {
-  const movies = [
-    {
-      id: 1,
-      title: "Reacher",
-      poster:
-        "https://www.themoviedb.org/t/p/w1280/oIAMQ42lzSd6ksvGe4WFMKqT0ja.jpg",
-    },
-    {
-      id: 3,
-      title: "Zero Day (2025)",
-      poster:
-        "https://www.themoviedb.org/t/p/w1280/odIyR46aAX59dvQ1ON4P53ow1aE.jpg",
-    },
-    {
-      id: 4,
-      title: "INVINCIBLE (2021)",
-      poster:
-        "https://www.themoviedb.org/t/p/w1280/jBn4LWlgdsf6xIUYhYBwpctBVsj.jpg",
-    },
-    {
-      id: 5,
-      title: "The Brutalist (2024)",
-      poster:
-        "https://www.themoviedb.org/t/p/w1280/zGsBZKyUTXgNSkqAfgoCb4Bz0FK.jpg",
-    },
-    {
-      id: 6,
-      title: "Captain America: Brave New World ",
-      poster:
-        "https://www.themoviedb.org/t/p/w1280/pzIddUEMWhWzfvLI3TwxUG2wGoi.jpg",
-    },
-  ];
+  const movies = useAppSelector(state => state.movies);
   return (
     <div
       className="
-  flex
-  flex-col
-  gap-5
-  overflow-auto
-  max-h-[calc(100vh-6rem)]
-  pb-10
+      flex-col
+      gap-5
+      overflow-auto
+      max-h-[calc(100vh-6rem)]
+      pb-10
+      flex
   "
     >
       <h1 className="text-lg">Good Morning Mr. Naval Ravikant!</h1>
       <div
         className="
-      md:pr-10
-      pr-0
-      grid
-      lg:grid-cols-3
-      md:grid-cols-2
-      grid-cols-1
-      gap-5
+        pr-0
+        grid
+        lg:grid-cols-3
+        md:grid-cols-2
+        grid-cols-1
+        gap-5
+        md:pr-10
       "
       >
         {movies.map((movie, index) => (
@@ -143,11 +101,7 @@ function Movies() {
 }
 
 type TMovieProps = {
-  movie: {
-    title: string;
-    poster: string;
-    id:number
-  };
+  movie: Tmovie;
 };
 
 function Movie({ movie }: TMovieProps) {
@@ -155,18 +109,18 @@ function Movie({ movie }: TMovieProps) {
     <Link
     href={`/booking/${movie.id}`} 
       className="
-    flex
-    flex-col
-    gap-5
+      flex-col
+      gap-5
+      flex
     "
     >
       <figure
         className="
-      relative
-      h-[15rem]
-      w-full
-      shadow-xl
-      rounded-xl 
+        relative
+        h-[15rem]
+        w-full
+        rounded-xl 
+        shadow-xl
       "
       >
         <Image
@@ -178,8 +132,8 @@ function Movie({ movie }: TMovieProps) {
       </figure>
       <h1
         className="
-    text-lg
-    font-semibold
+        text-lg
+        font-semibold
     "
       >
         {movie.title}

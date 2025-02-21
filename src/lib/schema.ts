@@ -13,3 +13,13 @@ export const loginSchema = z.object({
     }),
 
 })
+
+
+export const ticketBookSchema = z.object({
+    ticketCount : z.coerce.number({
+        required_error:"Ticket count is required",
+        invalid_type_error:"Invalid ticket count"
+    }),
+    showTime : z.enum(["9:00","12:00","18:00"],{ required_error:"Show time is required" }),
+    date : z.date({required_error:"Date is required"})
+})
