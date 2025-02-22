@@ -27,7 +27,7 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -43,7 +43,7 @@ type TticketBookFormProps = {
 
 export default function TicketBookForm({ movie }: TticketBookFormProps) {
   function delay() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         resolve(true);
       }, 2000);

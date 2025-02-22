@@ -5,9 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-type Props = {};
-
-export default function Sidebar({}: Props) {
+export default function Sidebar() {
   return (
     <div
       className="

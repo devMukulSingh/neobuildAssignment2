@@ -2,7 +2,6 @@ import UserButton from "@/components/commons/UserButton";
 import Image from "next/image";
 import React from "react";
 
-type Props = {};
 
 export default function Header({ poster }: { poster: string }) {
   return (

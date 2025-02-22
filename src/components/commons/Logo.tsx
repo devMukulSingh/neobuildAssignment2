@@ -1,9 +1,8 @@
 import { Earth } from "lucide-react";
 import React from "react";
 
-type Props = {};
 
-export default function Logo({}: Props) {
+export default function Logo( ) {
   return (
     <div
       className="

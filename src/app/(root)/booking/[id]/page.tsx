@@ -10,9 +10,8 @@ const TicketBookForm = dynamic( () => import("./components/TicketBookForm"),{
   loading: () => <Skeleton className="w-full h-[20rem]"/>
 })
 
-type Props = {};
 
-export default function page({}: Props) {
+export default function BookingFormPage() {
   const { id } = useParams();
   const movies = useAppSelector((state) => state.movies);
   const movie = movies.find((movie) => movie.id === id);

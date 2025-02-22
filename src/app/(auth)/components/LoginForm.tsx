@@ -12,17 +12,16 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Keyboard, Loader2, User } from "lucide-react";
+import { Keyboard, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 
-type Props = {};
 type TformValues = z.infer<typeof loginSchema>;
 type TForm = {
   form: UseFormReturn<TformValues, any, undefined>;
 };
-export default function LoginForm({}: Props) {
+export default function LoginForm() {
   const router = useRouter();
   const form = useForm<TformValues>({
     resolver: zodResolver(loginSchema),

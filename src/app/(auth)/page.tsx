@@ -2,9 +2,8 @@ import React from "react";
 import Logo from "@/components/commons/Logo";
 import LoginForm from "./components/LoginForm";
 
-type Props = {};
 
-export default function LoginPage({}: Props) {
+export default function LoginPage() {
   return (
     <div
       className="

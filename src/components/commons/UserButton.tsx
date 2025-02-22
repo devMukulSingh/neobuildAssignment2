@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from '../ui/button';
-import { CircleUser, UserCircle2 } from 'lucide-react';
+import { CircleUser } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type Props = {
