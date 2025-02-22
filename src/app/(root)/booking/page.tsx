@@ -42,7 +42,8 @@ function Header() {
       <div
         className="
         rounded-md
-        px-2
+        pl-2
+        pr-5
         flex
         items-center
         bg-neutral-300

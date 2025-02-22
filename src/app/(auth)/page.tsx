@@ -31,12 +31,9 @@ export default function LoginPage({}: Props) {
         text-white
         "
       >
-        <Logo/>
+        <Logo />
         <LoginForm />
       </div>
     </div>
   );
 }
-
-
-

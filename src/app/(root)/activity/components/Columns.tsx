@@ -1,9 +1,7 @@
 "use client";
-
 import { TTicket } from "@/redux/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-
 
 
 export const columns: ColumnDef<TTicket>[] = [

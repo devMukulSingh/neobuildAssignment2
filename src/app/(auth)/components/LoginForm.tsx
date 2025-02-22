@@ -12,7 +12,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Keyboard, User } from "lucide-react";
+import { Keyboard, Loader2, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -31,7 +31,7 @@ export default function LoginForm({}: Props) {
       password: "",
     },
   });
-  function onSubmit(data: TformValues) {
+  async function onSubmit(data: TformValues) {
     if (data.userName !== "naval.ravikant" || data.password !== "05111974") {
       return toast.error("Invalid credentials");
     }
@@ -66,7 +66,7 @@ export default function LoginForm({}: Props) {
   );
 }
 
-function UserNameField({ form }: TForm) {
+function UserNameField({ form,  }: TForm) {
   return (
     <FormField
       name="userName"
@@ -89,6 +89,7 @@ function UserNameField({ form }: TForm) {
             >
               <User />
               <Input
+               
                 placeholder="Username"
                 className="
                   pl-0
@@ -110,7 +111,7 @@ function UserNameField({ form }: TForm) {
   );
 }
 
-function PasswordField({ form }: TForm) {
+function PasswordField({ form,  }: TForm) {
   return (
     <FormField
       name="password"
@@ -132,6 +133,7 @@ function PasswordField({ form }: TForm) {
             >
               <Keyboard />
               <Input
+               
                 type="password"
                 placeholder="Password"
                 className="

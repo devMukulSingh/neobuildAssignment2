@@ -2,9 +2,13 @@
 import UserButton from "@/components/commons/UserButton";
 import { useAppSelector } from "@/redux/hooks";
 import React from "react";
-import { DataTable } from "./components/DataTable";
 import { columns } from "./components/Columns";
+import DataTable from "./components/DataTable";
 
+// import { DataTableProps } from "./components/DataTable";
+// const DataTable = dynamic( () => import("./components/DataTable").then(res => res.default),{
+//   loading : () => <Skeleton className="w-full h-3/4"/>
+// }) 
 export default function ActivityPage() {
   const bookedTickets = useAppSelector((state) => state.bookedTickets);
   return (

@@ -1,8 +1,10 @@
 import { useAppSelector } from "@/redux/hooks";
 import React from "react";
-import { Tmovie } from "@/redux/types";
-import Image from "next/image";
-import Link from "next/link";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+const Movie = dynamic( () => import("./Movie") ,{
+  loading:() =>  <Skeleton className="h-[15rem] w-full"/>
+})
 
 export default function Movies() {
   const movies = useAppSelector((state) => state.movies);
@@ -39,44 +41,3 @@ export default function Movies() {
   );
 }
 
-type TMovieProps = {
-  movie: Tmovie;
-};
-
-function Movie({ movie }: TMovieProps) {
-  return (
-    <Link
-      href={`/booking/${movie.id}`}
-      className="
-      flex-col
-      gap-5
-      flex
-    "
-    >
-      <figure
-        className="
-        relative
-        h-[15rem]
-        w-full
-        rounded-xl 
-        shadow-xl
-      "
-      >
-        <Image
-          className="object-cover rounded-xl object-top"
-          src={movie.poster}
-          fill
-          alt="poster"
-        />
-      </figure>
-      <h1
-        className="
-        text-lg
-        font-semibold
-    "
-      >
-        {movie.title}
-      </h1>
-    </Link>
-  );
-}
